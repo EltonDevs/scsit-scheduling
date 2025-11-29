@@ -1,5 +1,5 @@
 
-import UserAddressCard from "@/components/user-profile/UserAddressCard";
+// import UserAddressCard from "@/components/user-profile/UserAddressCard";
 import UserInfoCard from "@/components/user-profile/UserInfoCard";
 import UserMetaCard from "@/components/user-profile/UserMetaCard";
 import React from "react";
@@ -35,7 +35,7 @@ export default async function ProfilePage({ params }: PageProps) {
         <div className="space-y-6">
           <UserMetaCard User={User} />
           <UserInfoCard User={User} />
-          <UserAddressCard User={User} />
+          {/* <UserAddressCard User={User} /> */}
         </div>
       </div>
 

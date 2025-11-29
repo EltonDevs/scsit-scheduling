@@ -6,7 +6,7 @@ import PageBreadcrumb from "@/components/common/PageBreadCrumb";
 import BackButton from "@/components/ui/button/BackIcon";
 import UserMetaCard from "@/components/user-profile/UserMetaCard";
 import UserInfoCard from "@/components/user-profile/UserInfoCard";
-import UserAddressCard from "@/components/user-profile/UserAddressCard";
+// import UserAddressCard from "@/components/user-profile/UserAddressCard";
 import Spinner from "@/components/loading/Spinner";
 import { getTeacherById, Teacher } from "@/services/teacherService";
 
@@ -99,7 +99,7 @@ export default function ProfilePage({ params }: PageProps) {
         <div className="space-y-6">
           <UserMetaCard User={user} />
           <UserInfoCard User={user} />
-          <UserAddressCard User={user} />
+          {/* <UserAddressCard User={user} /> */}
         </div>
       </div>
     </div>

@@ -7,10 +7,11 @@ import PageBreadcrumb from "@/components/common/PageBreadCrumb";
 import { deanData } from "@/data/dean";
 import BackButton from "@/components/ui/button/BackIcon";
 
+
 interface PageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default async function ProfilePage({ params }: PageProps) {

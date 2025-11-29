@@ -21,7 +21,7 @@ interface AddTeacherModalProps {
   onSave: (teacher: Teacher) => void;
 }
 
-export default function AddTeacherModal({ isOpen, onClose, onSave }: AddTeacherModalProps) {
+export default function AddTeacherModal({ isOpen, onClose }: AddTeacherModalProps) {
  
 
   const [showPassword, setShowPassword] = useState(false);

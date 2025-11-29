@@ -27,18 +27,22 @@ interface CampusMapProps {
 
 const CampusMap: React.FC<CampusMapProps> = () => {
   const [hasMounted, setHasMounted] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [LeafletIcon, setLeafletIcon] = useState<any>(null);
 
   useEffect(() => {
     setHasMounted(true);
+    
+    // Dynamically import Icon from leaflet on client only
+    import("leaflet").then((L) => {
+      setLeafletIcon(() => L.Icon);
+    });
   }, []);
 
   const customIcon = useMemo(() => {
-    if (!hasMounted) return null;
+    if (!hasMounted || !LeafletIcon) return null;
 
-    // Dynamically require `Icon` from leaflet on client only
-    const { Icon } = require("leaflet");
-
-    return new Icon({
+    return new LeafletIcon({
       iconUrl:
         "data:image/svg+xml," +
         encodeURIComponent(`
@@ -51,7 +55,7 @@ const CampusMap: React.FC<CampusMapProps> = () => {
       iconAnchor: [12, 24],
       popupAnchor: [0, -24],
     });
-  }, [hasMounted]);
+  }, [hasMounted, LeafletIcon]);
 
   // Only render after mount to prevent SSR errors
   if (!hasMounted || !customIcon) return null;

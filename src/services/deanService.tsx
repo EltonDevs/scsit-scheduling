@@ -14,9 +14,17 @@ export interface Dean {
   profile_picture: string | null;
   password: string;
   assigned_since: string | null;
+ createdAt: string;
+  updatedAt: string;
 }
 
 export async function getDeans(): Promise<Dean[]> {
   const res = await axiosInstance.get("/users/all-deans");
+  return res.data;
+}
+
+
+export async function getDeanById(userId: string): Promise<Dean> {
+  const res = await axiosInstance.get(`/users/retrieved/${userId}`);
   return res.data;
 }

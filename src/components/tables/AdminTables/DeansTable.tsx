@@ -9,7 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "../../ui/table";
-import { Eye, Trash2, Pencil } from "lucide-react";
+import { Eye, Trash2 } from "lucide-react";
 import Badge from "../../ui/badge/Badge";
 import Image from "next/image";
 import Pagination from "../Pagination";
@@ -97,26 +97,20 @@ export default function DeanTable({}: DeanTableProps) {
     }
   };
 
-  const handleView = (id: string) => {
-    const dean = deans.find(d => d.userId === id);
-    if (dean) {
-      setSelectedDean(dean);
-      setIsViewModalOpen(true);
-    } else {
-      router.push(`/DeanPage/profile/${id}`);
-    }
+   const handleView = (userId: string) => {
+    router.push(`/admin/DeanPage/profile/${userId}`);
   };
 
-  const handleEdit = (userId: string) => {
-    const dean = deans.find(d => d.userId === userId);
-    if (dean) {
-      setSelectedDean(dean);
-      setIsUpdateModalOpen(true);
-      if (isViewModalOpen) {
-        setIsViewModalOpen(false);
-      }
-    }
-  };
+  // const handleEdit = (userId: string) => {
+  //   const dean = deans.find(d => d.userId === userId);
+  //   if (dean) {
+  //     setSelectedDean(dean);
+  //     setIsUpdateModalOpen(true);
+  //     if (isViewModalOpen) {
+  //       setIsViewModalOpen(false);
+  //     }
+  //   }
+  // };
 
 
 
@@ -307,7 +301,7 @@ export default function DeanTable({}: DeanTableProps) {
                           >
                             <Eye size={18} />
                           </button>
-                          <button
+                          {/* <button
                             title="Edit"
                             aria-label="Edit dean"
                             onClick={() => handleEdit(dean.userId)}
@@ -315,7 +309,7 @@ export default function DeanTable({}: DeanTableProps) {
                             className="transition hover:text-yellow-500 disabled:opacity-50"
                           >
                             <Pencil size={18} />
-                          </button>
+                          </button> */}
                           <button
                             title="Delete"
                             aria-label="Delete dean"

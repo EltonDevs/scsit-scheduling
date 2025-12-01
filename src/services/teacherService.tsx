@@ -16,7 +16,6 @@ export interface Teacher {
   assigned_since: string | null;
   createdAt: string;
   updatedAt: string;
-
 }
 
 export async function getteachers(): Promise<Teacher[]> {

@@ -14,8 +14,6 @@ export const useRoleRedirect = () => {
       router.push("/admin");
     } else if (userRoles.includes("ROLE_DEAN")) {
       router.push("/dean");
-    } else if (userRoles.includes("ROLE_TEACHER")) {
-      router.push("/teacher");
     } else {
       router.push("/not-found");
     }

@@ -4,7 +4,7 @@ import React from "react";
 import { Modal } from "@/components/ui/modal";
 import Label from "@/components/form/Label";
 import Button from "@/components/ui/button/Button";
-import { Course } from "@/services/courseService";
+import { Course } from "@/data/all-data-context";
 import { 
   BookOpen, 
   Calendar, 

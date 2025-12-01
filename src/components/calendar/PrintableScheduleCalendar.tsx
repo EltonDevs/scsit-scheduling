@@ -6,6 +6,7 @@ interface PrintableScheduleCalendarProps {
   schedules: Schedule[];
   filters: {
     search?: string;
+    course?: string;
     subject?: string;
     teacher?: string;
     room?: string;
@@ -91,6 +92,7 @@ export function PrintableScheduleCalendar({ schedules, filters }: PrintableSched
             <strong style={{ fontSize: "12px" }}>Active Filters:</strong>
             <div style={{ fontSize: "11px", marginTop: "4px" }}>
               {filters.search && <span>Search: &quot;{filters.search}&quot; | </span>}
+              {filters.course && <span>Course: {filters.course} | </span>}
               {filters.subject && <span>Subject: {filters.subject} | </span>}
               {filters.teacher && <span>Teacher: {filters.teacher} | </span>}
               {filters.room && <span>Room: {filters.room} | </span>}
@@ -215,6 +217,7 @@ interface PrintableScheduleListProps {
   schedules: Schedule[];
   filters: {
     search?: string;
+    course?: string;
     subject?: string;
     teacher?: string;
     room?: string;
@@ -263,6 +266,7 @@ export function PrintableScheduleList({ schedules, filters }: PrintableScheduleL
             <strong style={{ fontSize: "12px" }}>Active Filters:</strong>
             <div style={{ fontSize: "11px", marginTop: "4px" }}>
               {filters.search && <span>Search: &quot;{filters.search}&quot; | </span>}
+              {filters.course && <span>Course: {filters.course} | </span>}
               {filters.subject && <span>Subject: {filters.subject} | </span>}
               {filters.teacher && <span>Teacher: {filters.teacher} | </span>}
               {filters.room && <span>Room: {filters.room} | </span>}

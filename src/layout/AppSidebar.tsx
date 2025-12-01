@@ -6,10 +6,10 @@ import { usePathname } from "next/navigation";
 import { useSidebar } from "../context/SidebarContext";
 import {
   LayoutGrid,
-  Calendar,
+  // Calendar,
   ChevronDown,
   MoreHorizontal,
-  List,
+  // List,
   FileText,
   PieChart,
  
@@ -76,10 +76,11 @@ const navItems: NavItem[] = [
   {
     name: "Schedules",
     icon: <FileText size={20} />,
-    subItems: [
-      { name: "Lists", path: "/admin/calendarList", icon: <List size={18} />, pro: false },
-      { name: "Calendar", path: "/admin/calendar", pro: false, icon: <Calendar size={18} /> },
-    ],
+    path: "/admin/calendarList",
+    // subItems: [
+    //   { name: "Lists", path: "/admin/calendarList", icon: <List size={18} />, pro: false },
+    //   { name: "Calendar", path: "/admin/calendar", pro: false, icon: <Calendar size={18} /> },
+    // ],
   },
 ];
 

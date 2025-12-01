@@ -5,13 +5,14 @@ import Pagination from "@/components/tables/Pagination";
 import Spinner from "@/components/loading/Spinner";
 import Badge from "@/components/ui/badge/Badge";
 import Button from "@/components/ui/button/Button";
-import { Eye, Pencil, Trash2 } from "lucide-react";
-import { Printer } from "lucide-react";
+import { Eye, Pencil, Trash2, Printer } from "lucide-react";
 
 import { useSchedules } from "@/hooks/useSchedules";
 import { useRooms } from "@/hooks/useRoom";
 import { useTeachers } from "@/hooks/useTeacher";
 import { useSubjects } from "@/hooks/useSubjects";
+import { useCourses } from "@/hooks/useCourses";
+import { useAuth } from "@/context/AuthContext";
 
 import { Table, TableHeader, TableRow, TableCell, TableBody } from "@/components/ui/table";
 
@@ -33,6 +34,7 @@ export default function ScheduleListPage() {
   const [filterRoom, setFilterRoom] = useState("");
   const [filterDay, setFilterDay] = useState("");
   const [filterSubject, setFilterSubject] = useState("");
+  const [filterCourse, setFilterCourse] = useState("");
   const [isPrintView, setIsPrintView] = useState(false);
   
   // Modal states
@@ -44,11 +46,16 @@ export default function ScheduleListPage() {
   
   const pageSize = 10;
 
+  // ── AUTH ─────────────────────────────────────────────────────────────
+  const { user } = useAuth();
+  const canAddSchedule = user?.role === "ROLE_DEAN";
+
   // ── DATA QUERIES ─────────────────────────────────────────────────────
   const { scheduleQuery, createSchedules, updateSchedules, deleteSchedules } = useSchedules();
   const { roomQuery } = useRooms();
   const { teacherQuery } = useTeachers();
   const { subjectQuery } = useSubjects();
+  const { courseQuery } = useCourses();
 
   const schedules: Schedule[] = useMemo(
     () => (Array.isArray(scheduleQuery.data) ? scheduleQuery.data : []),
@@ -58,12 +65,14 @@ export default function ScheduleListPage() {
   const rooms: Room[] = useMemo(() => roomQuery.data ?? [], [roomQuery.data]);
   const teachers: Teacher[] = useMemo(() => teacherQuery.data ?? [], [teacherQuery.data]);
   const subjects: Subject[] = useMemo(() => subjectQuery.data ?? [], [subjectQuery.data]);
+  const courses = useMemo(() => courseQuery.data ?? [], [courseQuery.data]);
 
   const isLoading =
     scheduleQuery.isLoading ||
     roomQuery.isLoading ||
     teacherQuery.isLoading ||
-    subjectQuery.isLoading;
+    subjectQuery.isLoading ||
+    courseQuery.isLoading;
 
   // ── FILTER OPTIONS ───────────────────────────────────────────────────
   const teacherOptions = useMemo(
@@ -80,7 +89,10 @@ export default function ScheduleListPage() {
   const roomOptions = useMemo(
     () =>
       rooms
-        .map((r) => ({ value: r.roomId, label: r.roomCode ?? r.roomId }))
+        .map((r) => ({ 
+          value: r.roomId, 
+          label: r.roomCode ?? r.roomId,
+        }))
         .sort((a, b) => a.label.localeCompare(b.label)),
     [rooms]
   );
@@ -88,9 +100,21 @@ export default function ScheduleListPage() {
   const subjectOptions = useMemo(
     () =>
       subjects
-        .map((s) => ({ value: s.subjectId, label: `${s.code} - ${s.name}` }))
+        .map((s) => ({ 
+          value: s.subjectId, 
+          label: `${s.code} - ${s.name}`,
+          courseId: s.courseId,
+        }))
         .sort((a, b) => a.label.localeCompare(b.label)),
     [subjects]
+  );
+
+  const courseOptions = useMemo(
+    () =>
+      courses
+        .map((c) => ({ value: c.courseId, label: c.title }))
+        .sort((a, b) => a.label.localeCompare(b.label)),
+    [courses]
   );
 
   const daysOfWeek = [
@@ -129,12 +153,20 @@ export default function ScheduleListPage() {
       const matchesSubject =
         filterSubject === "" || (s.subjectName ?? s.subjectId) === filterSubject;
 
+      // Course filter - check through subject
+      let matchesCourse = true;
+      if (filterCourse) {
+        const subject = subjects.find((sub) => sub.subjectId === s.subjectId);
+        matchesCourse = subject?.courseId === filterCourse;
+      }
+
       return (
         matchesSearch &&
         matchesTeacher &&
         matchesRoom &&
         matchesDay &&
-        matchesSubject
+        matchesSubject &&
+        matchesCourse
       );
     });
   }, [
@@ -144,6 +176,8 @@ export default function ScheduleListPage() {
     filterRoom,
     filterDay,
     filterSubject,
+    filterCourse,
+    subjects,
   ]);
 
   const totalPages = Math.ceil(filtered.length / pageSize);
@@ -162,6 +196,7 @@ export default function ScheduleListPage() {
     setFilterRoom("");
     setFilterDay("");
     setFilterSubject("");
+    setFilterCourse("");
     setCurrentPage(1);
   };
 
@@ -229,27 +264,29 @@ export default function ScheduleListPage() {
   };
 
   const handlePrint = () => {
-  setIsPrintView(true);
-  setTimeout(() => {
-    window.print();
-    setIsPrintView(false);
-  }, 100);
-};
+    setIsPrintView(true);
+    setTimeout(() => {
+      window.print();
+      setIsPrintView(false);
+    }, 100);
+  };
 
-// ── HANDLE PRINT SCHEDULES ───────────────────────────────────────────
-const getFilterLabel = (type: string, value: string) => {
-  if (!value) return "";
-  switch (type) {
-    case "subject":
-      return subjectOptions.find(o => o.value === value)?.label || value;
-    case "teacher":
-      return teacherOptions.find(o => o.value === value)?.label || value;
-    case "room":
-      return roomOptions.find(o => o.value === value)?.label || value;
-    default:
-      return value;
-  }
-};
+  // ── HANDLE PRINT SCHEDULES ───────────────────────────────────────────
+  const getFilterLabel = (type: string, value: string) => {
+    if (!value) return "";
+    switch (type) {
+      case "subject":
+        return subjectOptions.find(o => o.value === value)?.label || value;
+      case "teacher":
+        return teacherOptions.find(o => o.value === value)?.label || value;
+      case "room":
+        return roomOptions.find(o => o.value === value)?.label || value;
+      case "course":
+        return courseOptions.find(o => o.value === value)?.label || value;
+      default:
+        return value;
+    }
+  };
 
   // ── RENDER ───────────────────────────────────────────────────────────
   return (
@@ -268,36 +305,47 @@ const getFilterLabel = (type: string, value: string) => {
             }}
           />
 
-          {/* <Button
-            onClick={() => setAddModalOpen(true)}
-            disabled={isLoading}
-            className="w-full sm:w-auto rounded-lg bg-brand-500 px-5 py-2.5 text-sm font-medium text-white hover:bg-brand-600 transition whitespace-nowrap disabled:opacity-50"
-          >
-            + Add Schedule
-          </Button> */}
-
           <div className="flex gap-2">
-          <Button
-            onClick={handlePrint}
-            disabled={isLoading || filtered.length === 0}
-            className="flex items-center gap-2 rounded-lg bg-green-600 hover:bg-green-700 px-4 py-2.5 text-sm font-medium text-white transition disabled:opacity-50"
-          >
-            <Printer className="w-4 h-4" />
-            Print List
-          </Button>
-          
-          <Button
-            onClick={() => setAddModalOpen(true)}
-            disabled={isLoading}
-            className="rounded-lg bg-brand-500 px-5 py-2.5 text-sm font-medium text-white hover:bg-brand-600 transition disabled:opacity-50"
-          >
-            + Add Schedule
-          </Button>
-        </div>
+            <Button
+              onClick={handlePrint}
+              disabled={isLoading || filtered.length === 0}
+              className="flex items-center gap-2 rounded-lg bg-green-600 hover:bg-green-700 px-4 py-2.5 text-sm font-medium text-white transition disabled:opacity-50"
+            >
+              <Printer className="w-4 h-4" />
+              Print List
+            </Button>
+            
+            {canAddSchedule && (
+              <Button
+                onClick={() => setAddModalOpen(true)}
+                disabled={isLoading}
+                className="rounded-lg bg-brand-500 px-5 py-2.5 text-sm font-medium text-white hover:bg-brand-600 transition disabled:opacity-50"
+              >
+                + Add Schedule
+              </Button>
+            )}
+          </div>
         </div>
 
         {/* Filters */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3">
+          <select
+            value={filterCourse}
+            onChange={(e) => {
+              setFilterCourse(e.target.value);
+              setCurrentPage(1);
+            }}
+            disabled={isLoading}
+            className="h-10 rounded-lg border border-gray-300 bg-white px-3 text-sm text-gray-800 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 dark:border-white/10 dark:bg-gray-800 dark:text-white disabled:opacity-50"
+          >
+            <option value="">All Courses</option>
+            {courseOptions.map((opt) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
+            ))}
+          </select>
+
           <select
             value={filterSubject}
             onChange={(e) => {
@@ -509,13 +557,14 @@ const getFilterLabel = (type: string, value: string) => {
           schedules={filtered}
           filters={{
             search,
+            course: getFilterLabel("course", filterCourse),
             subject: getFilterLabel("subject", filterSubject),
             teacher: getFilterLabel("teacher", filterTeacher),
             room: getFilterLabel("room", filterRoom),
             day: filterDay,
           }}
         />
-)}
+      )}
 
       {/* MODALS */}
       <AddScheduleModal

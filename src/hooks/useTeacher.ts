@@ -1,7 +1,7 @@
 // hooks/useDepartments.ts
 
 
-import { getteachers, Teacher } from "@/services/teacherService";
+import { getTeachers, Teacher } from "@/services/teacherService";
 import { useQuery} from "@tanstack/react-query";
 
 
@@ -11,7 +11,7 @@ export function useTeachers() {
   // Fetch all courses
   const teacherQuery = useQuery<Teacher[]>({
     queryKey: ["teachers"],
-    queryFn: getteachers,
+    queryFn: getTeachers,
     staleTime: 1000 * 60 * 5, 
   });
 

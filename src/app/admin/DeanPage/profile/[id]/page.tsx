@@ -19,7 +19,7 @@ export default function ProfilePage({ params }: PageProps) {
   const resolvedParams = React.use(params);
   const { id } = resolvedParams;
   
-  const [dean, setDean] = useState<Dean | null>(null);
+  const [user, setUser] = useState<Dean | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -33,7 +33,7 @@ export default function ProfilePage({ params }: PageProps) {
         const data = await getDeanById(id);
         
         if (isMounted) {
-          setDean(data);
+          setUser(data);
         }
       } catch (err: unknown) {
         if (isMounted) {
@@ -76,7 +76,7 @@ export default function ProfilePage({ params }: PageProps) {
     );
   }
 
-  if (!dean) {
+  if (!user) {
     return (
       <div className="text-red-500 text-center p-8">
         Dean not found.
@@ -90,13 +90,13 @@ export default function ProfilePage({ params }: PageProps) {
       <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] lg:p-6">
         <div className="mb-5 flex items-center justify-between lg:mb-7">
           <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-            Profile of {dean.firstName} {dean.lastName}
+            Profile of {user.firstName} {user.lastName}
           </h3>
           <BackButton />
         </div>
         <div className="space-y-6">
-          <UserMetaCard user={dean} />
-          <UserInfoCard user={dean} />
+          <UserMetaCard user={user} />
+          <UserInfoCard user={user} />
           {/* <UserAddressCard dean={dean} /> */}
         </div>
       </div>

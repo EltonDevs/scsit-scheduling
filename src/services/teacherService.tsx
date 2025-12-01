@@ -14,6 +14,9 @@ export interface Teacher {
   profile_picture: string | null;
   password: string;
   assigned_since: string | null;
+  createdAt: string;
+  updatedAt: string;
+
 }
 
 export async function getteachers(): Promise<Teacher[]> {

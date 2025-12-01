@@ -92,14 +92,14 @@ export default function ProfilePage({ params }: PageProps) {
       <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] lg:p-6">
         <div className="mb-5 flex items-center justify-between lg:mb-7">
           <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-            Profile of {user.firstName}
+            Profile of {user.firstName} {user.lastName}
           </h3>
           <BackButton />
         </div>
         <div className="space-y-6">
-          <UserMetaCard User={user} />
-          <UserInfoCard User={user} />
-          {/* <UserAddressCard User={user} /> */}
+          <UserMetaCard user={user} />
+          <UserInfoCard user={user} />
+          {/* <UserAddressCard user={user} /> */}
         </div>
       </div>
     </div>

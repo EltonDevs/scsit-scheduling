@@ -5,15 +5,15 @@ import { Modal } from "../../ui/modal";
 import Button from "../../ui/button/Button";
 import Image from "next/image";
 import Badge from "../../ui/badge/Badge";
-import { Dean } from "@/data/dean";
+import { User } from "@/types/User";
 
-interface TeacherModalProps {
+interface DeanModalProps {
   isOpen: boolean;
   onClose: () => void;
-  dean: Dean | null;
+  dean: User | null;
 }
 
-export default function DeanViewModal({ isOpen, onClose, dean }: TeacherModalProps) {
+export default function DeanViewModal({ isOpen, onClose, dean }: DeanModalProps) {
   if (!dean) return null;
 
   return (
@@ -22,17 +22,17 @@ export default function DeanViewModal({ isOpen, onClose, dean }: TeacherModalPro
         {/* Header */}
         <div className="flex items-center justify-between">
           <h3 className="text-xl font-semibold text-gray-800 dark:text-white/90">
-            Teacher Profile
+            Dean Profile
           </h3>
         </div>
 
         {/* Profile Info */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5">
           <div className="w-24 h-24 rounded-full overflow-hidden border border-gray-200 dark:border-gray-700 shadow-sm">
-            {dean.profile_picture ? (
+            {dean.profilePicture ? (
               <Image
-                src={dean.profile_picture}
-                alt={dean.name}
+                src={dean.profilePicture}
+                alt={`${dean.firstName} ${dean.lastName}`}
                 width={96}
                 height={96}
                 className="object-cover w-full h-full"
@@ -45,13 +45,13 @@ export default function DeanViewModal({ isOpen, onClose, dean }: TeacherModalPro
           </div>
           <div className="flex flex-col gap-1">
             <h4 className="text-lg font-medium text-gray-900 dark:text-white">
-              {dean.name}
+              {dean.firstName} {dean.lastName}
             </h4>
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              {dean.department || "No department"}
+              {dean.department?.name || "No department"}
             </p>
-            <Badge size="sm" color={dean.is_active ? "success" : "error"}>
-              {dean.is_active ? "Active" : "Inactive"}
+            <Badge size="sm" color={dean.isActive ? "success" : "error"}>
+              {dean.isActive ? "Active" : "Inactive"}
             </Badge>
           </div>
         </div>
@@ -61,10 +61,11 @@ export default function DeanViewModal({ isOpen, onClose, dean }: TeacherModalPro
         {/* Detail Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6">
           <Detail label="Email" value={dean.email} />
-          <Detail label="Phone Number" value={dean.phone_number || "Not provided"} />
-          <Detail label="Department" value={dean.department || "N/A"} />
+          <Detail label="Phone Number" value={dean.phone || "Not provided"} />
+          <Detail label="Department" value={dean.department?.name || "N/A"} />
           <Detail label="Role" value={dean.role || "N/A"} />
-          <Detail label="Assigned Since" value={dean.assigned_since || "Not provided"} />
+          <Detail label="Created At" value={new Date(dean.createdAt).toLocaleDateString()} />
+          <Detail label="Last Updated" value={new Date(dean.updatedAt).toLocaleDateString()} />
         </div>
 
         {/* Footer */}

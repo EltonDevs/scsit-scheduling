@@ -6,7 +6,13 @@ import Button from "../ui/button/Button";
 import Input from "../form/input/InputField";
 import Label from "../form/Label";
 
-export default function UserInfoCard({ User }) {
+import { User } from "@/types/User";
+
+type UserInfoCardProps = {
+  user: User;
+};
+
+export default function UserInfoCard({ user }: UserInfoCardProps) {
   const { isOpen, closeModal } = useModal();
   const handleSave = () => {
     // Handle save logic here
@@ -27,7 +33,16 @@ export default function UserInfoCard({ User }) {
                 First Name
               </p>
               <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-                {User.name}
+                {user.firstName}
+              </p>
+            </div>
+
+            <div>
+              <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
+                Last Name
+              </p>
+              <p className="text-sm font-medium text-gray-800 dark:text-white/90">
+                {user.lastName}
               </p>
             </div>
 
@@ -36,7 +51,7 @@ export default function UserInfoCard({ User }) {
                 Department
               </p>
               <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-                 {User.department}
+                {user.department?.name || 'N/A'}
               </p>
             </div>
 
@@ -45,7 +60,7 @@ export default function UserInfoCard({ User }) {
                 Email address
               </p>
               <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-                 {User.email}
+                {user.email}
               </p>
             </div>
 
@@ -54,7 +69,7 @@ export default function UserInfoCard({ User }) {
                 Phone
               </p>
               <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-                {User.phone_number}
+                {user.phone || 'N/A'}
               </p>
             </div>
 
@@ -63,7 +78,7 @@ export default function UserInfoCard({ User }) {
                 Role
               </p>
               <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-                {User.role}
+                {user.role}
               </p>
             </div>
           </div>
@@ -148,27 +163,27 @@ export default function UserInfoCard({ User }) {
                 <div className="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-2">
                   <div className="col-span-2 lg:col-span-1">
                     <Label>First Name</Label>
-                    <Input type="text" defaultValue="Musharof" />
+                    <Input type="text" defaultValue={user.firstName} />
                   </div>
 
                   <div className="col-span-2 lg:col-span-1">
                     <Label>Last Name</Label>
-                    <Input type="text" defaultValue="Chowdhury" />
+                    <Input type="text" defaultValue={user.lastName} />
                   </div>
 
                   <div className="col-span-2 lg:col-span-1">
                     <Label>Email Address</Label>
-                    <Input type="text" defaultValue="randomuser@pimjo.com" />
+                    <Input type="text" defaultValue={user.email} />
                   </div>
 
                   <div className="col-span-2 lg:col-span-1">
                     <Label>Phone</Label>
-                    <Input type="text" defaultValue="+09 363 398 46" />
+                    <Input type="text" defaultValue={user.phone || ''} />
                   </div>
 
                   <div className="col-span-2">
-                    <Label>Bio</Label>
-                    <Input type="text" defaultValue="Team Manager" />
+                    <Label>Role</Label>
+                    <Input type="text" defaultValue={user.role} />
                   </div>
                 </div>
               </div>

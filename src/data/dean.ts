@@ -1,64 +1,69 @@
-// data/teachers.ts
-export interface Dean {
-  id: string;
-  name: string;
-  email: string;
-  phone_number: string | null;
-  department: string;
-  role: string | "dean";
-  is_active: boolean;
-  profile_picture: string | null;
-  password: string;
-  assigned_since: string | null;
-}
+// data/dean.ts
+import { User, UserRole } from "@/types/User";
 
-export const deanData: Dean[] = [
+export const deanData: User[] = [
   {
-    id: "1",
-    name: "Lindsey Curtis",
+    userId: "1",
+    firstName: "Lindsey",
+    lastName: "Curtis",
     email: "lindsey@example.com",
-    phone_number: "+63 912 345 6789",
-    department: "Computer Science",
-    role: "dean",
-    is_active: true,
-    profile_picture: "/images/user/user-17.jpg",
-    password: "hashed_password_1", // In production, passwords should be securely hashed
-    assigned_since: "2023-01-15",
+    phone: "+63 912 345 6789",
+    department: {
+      departmentId: "cs-001",
+      name: "Computer Science"
+    },
+    role: "DEAN" as UserRole,
+    isActive: true,
+    profilePicture: "/images/user/user-17.jpg",
+    createdAt: "2023-01-15T00:00:00Z",
+    updatedAt: "2023-01-15T00:00:00Z",
   },
   {
-    id: "2",
-    name: "Kaiya George",
+    userId: "2",
+    firstName: "Kaiya",
+    lastName: "George",
     email: "kaiya@example.com",
-    phone_number: "+63 998 765 4321",
-    department: "Information Tech",
-    role: "dean",
-    is_active: false,
-    profile_picture: "/images/user/user-18.jpg",
-    password: "hashed_password_2",
-    assigned_since: "2022-06-10",
+    phone: "+63 998 765 4321",
+    department: {
+      departmentId: "it-001",
+      name: "Information Tech"
+    },
+    role: "DEAN" as UserRole,
+    isActive: false,
+    profilePicture: "/images/user/user-18.jpg",
+    createdAt: "2022-06-10T00:00:00Z",
+    updatedAt: "2022-06-10T00:00:00Z",
   },
   {
-    id: "3",
-    name: "Zain Geidt",
+    userId: "3",
+    firstName: "Zain",
+    lastName: "Geidt",
     email: "zain@example.com",
-    phone_number: "+63 917 123 4567",
-    department: "Business",
-    role: "dean",
-    is_active: true,
-    profile_picture: "/images/user/user-19.jpg",
-    password: "hashed_password_3",
-    assigned_since: "2021-09-01",
+    phone: "+63 917 123 4567",
+    department: {
+      departmentId: "bus-001",
+      name: "Business"
+    },
+    role: "DEAN" as UserRole,
+    isActive: true,
+    profilePicture: "/images/user/user-19.jpg",
+    createdAt: "2021-09-01T00:00:00Z",
+    updatedAt: "2021-09-01T00:00:00Z",
   },
   {
-    id: "4",
-    name: "Abram Schleifer",
+    userId: "4",
+    firstName: "Abram",
+    lastName: "Schleifer",
     email: "abram@example.com",
-    phone_number: null,
-    department: "Engineering",
-    role: "dean",
-    is_active: false,
-    profile_picture: null,
-    password: "hashed_password_4",
-    assigned_since: null,
+    phone: null,
+    department: {
+      departmentId: "eng-001",
+      name: "Engineering"
+    },
+    role: "DEAN" as UserRole,
+    isActive: false,
+    profilePicture: null,
+    createdAt: "2020-03-20T00:00:00Z",
+    updatedAt: "2020-03-20T00:00:00Z",
   },
 ];

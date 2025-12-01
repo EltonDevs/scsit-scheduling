@@ -7,33 +7,39 @@ import Button from "../ui/button/Button";
 import Input from "../form/input/InputField";
 import Label from "../form/Label";
 import Image from "next/image";
+import { User } from "@/types/User";
 
-export default function UserMetaCard({ User }) {
+type UserMetaCardProps = {
+  user: User;
+};
+
+export default function UserMetaCard({ user }: UserMetaCardProps) {
   const { isOpen, openModal, closeModal } = useModal();
 
   // State for form data, initialized with user props
   const [formData, setFormData] = useState({
-    fullName: User.name || "",
-    email: User.email || "",
-    phone: User.phone_number || "",
-    bio: User.role || "",
-    department: User.department || "",
-    profilePicture: User.profile_picture || "/images/user/default.jpg", // Current profile picture URL
+    firstName: user.firstName || "",
+    lastName: user.lastName || "",
+    email: user.email || "",
+    phone: user.phone || "",
+    role: user.role || "",
+    department: user.department?.name || "",
+    profilePicture: user.profilePicture || "/images/user/default.jpg", // Current profile picture URL
   });
 
   // State for profile picture preview and file
   const [preview, setPreview] = useState(formData.profilePicture);
-  const [file, setFile] = useState(null);
+  const [file, setFile] = useState<File | null>(null);
 
   // Handle input changes
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   // Handle file upload for profile picture
-  const handleFileChange = (e) => {
-    const selectedFile = e.target.files[0];
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files?.[0];
     if (selectedFile) {
       setFile(selectedFile);
       const objectUrl = URL.createObjectURL(selectedFile);
@@ -43,7 +49,7 @@ export default function UserMetaCard({ User }) {
   };
 
   // Handle save (simulate API call; in production, upload file to server)
-  const handleSave = (e) => {
+  const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
     // TODO: Implement actual save logic, e.g., API call with formData and file
     // For file upload: Use FormData to send file to backend
@@ -55,11 +61,9 @@ export default function UserMetaCard({ User }) {
   // Dropdown options
   const roleOptions = [
     { value: "", label: "Select a position" },
-    { value: "Dean", label: "Dean" },
-    { value: "Professor", label: "Professor" },
-    { value: "Assistant Professor", label: "Assistant Professor" },
-    { value: "Lecturer", label: "Lecturer" },
-    { value: "Administrator", label: "Administrator" },
+    { value: "ADMIN", label: "Admin" },
+    { value: "DEAN", label: "Dean" },
+    { value: "TEACHER", label: "Teacher" },
   ];
 
   const departmentOptions = [
@@ -80,22 +84,22 @@ export default function UserMetaCard({ User }) {
               <Image
                 width={80}
                 height={80}
-                src={User.profile_picture || "/images/user/default.jpg"}
-                alt={`${User.name}'s avatar`}
+                src={user.profilePicture || "/images/user/default.jpg"}
+                alt={`${user.firstName} ${user.lastName}'s avatar`}
                 className="object-cover"
               />
             </div>
             <div className="order-3 xl:order-2 text-center xl:text-left">
               <h4 className="mb-2 text-lg font-semibold text-gray-800 dark:text-white/90">
-                {User.name}
+                {user.firstName} {user.lastName}
               </h4>
               <div className="flex flex-col items-center gap-1 xl:flex-row xl:gap-3">
                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                  {User.role || "N/A"}
+                  {user.role || "N/A"}
                 </p>
                 <div className="hidden h-3.5 w-px bg-gray-300 dark:bg-gray-700 xl:block"></div>
                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                  {User.email || "N/A"}
+                  {user.email || "N/A"}
                 </p>
               </div>
             </div>
@@ -176,14 +180,25 @@ export default function UserMetaCard({ User }) {
                 </h5>
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                   <div>
-                    <Label htmlFor="fullName">Full Name</Label>
+                    <Label htmlFor="firstName">First Name</Label>
                     <Input
-                      id="fullName"
-                      name="fullName"
+                      id="firstName"
+                      name="firstName"
                       type="text"
-                      value={formData.fullName}
+                      value={formData.firstName}
                       onChange={handleChange}
-                      placeholder="Full Name"
+                      placeholder="First Name"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="lastName">Last Name</Label>
+                    <Input
+                      id="lastName"
+                      name="lastName"
+                      type="text"
+                      value={formData.lastName}
+                      onChange={handleChange}
+                      placeholder="Last Name"
                     />
                   </div>
                   <div>
@@ -209,11 +224,11 @@ export default function UserMetaCard({ User }) {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="bio">Position</Label>
+                    <Label htmlFor="role">Role</Label>
                     <select
-                      id="bio"
-                      name="bio"
-                      value={formData.bio}
+                      id="role"
+                      name="role"
+                      value={formData.role}
                       onChange={handleChange}
                       className="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:focus:border-blue-400 dark:focus:ring-blue-400"
                     >
@@ -224,7 +239,7 @@ export default function UserMetaCard({ User }) {
                       ))}
                     </select>
                   </div>
-                  <div className="md:col-span-2">
+                  <div>
                     <Label htmlFor="department">Department</Label>
                     <select
                       id="department"
@@ -244,10 +259,10 @@ export default function UserMetaCard({ User }) {
               </div>
             </div>
             <div className="flex items-center gap-3 px-2 mt-6 lg:justify-end border-t pt-4 dark:border-gray-800">
-              <Button size="sm" variant="outline" onClick={closeModal}>
+              <Button size="sm" variant="outline" type="button" onClick={closeModal}>
                 Cancel
               </Button>
-              <Button size="sm" >
+              <Button size="sm" type="submit">
                 Save Changes
               </Button>
             </div>

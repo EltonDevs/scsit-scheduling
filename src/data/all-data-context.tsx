@@ -192,7 +192,7 @@ export const mockUsers: User[] = [
     userId: "user-admin-001",
     firstName: "John",
     lastName: "Admin",
-    email: "admin@school.edu",
+    email: "admin@gmail.com",
     role: "ROLE_ADMIN",
     phone: "+63 917 123 4567",
     isActive: true,
@@ -202,9 +202,9 @@ export const mockUsers: User[] = [
   // Deans
   {
     userId: "user-dean-001",
-    firstName: "Lindsey",
-    lastName: "Curtis",
-    email: "lindsey.curtis@school.edu",
+    firstName: "Elton",
+    lastName: "Dagodog",
+    email: "elton@gmail.com",
     role: "ROLE_DEAN",
     departmentId: "dept-001",
     departmentName: "Computer Science",
